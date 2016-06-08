@@ -5,6 +5,7 @@ This is a poem writer model which we implemented.
 Train
 In the train function, we didn't set it to run through the whole dataset, cause that would cost too much time. If want to change that, just change the number of iterations.
 In the first loop, the number of iterations multiplies batch size equals the number of poems that the model is learning from. 
+
 To train, use the following command:
 python train.py
 
