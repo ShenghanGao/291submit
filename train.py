@@ -228,8 +228,12 @@ def train(session, train_model, data, eval_op, index_to_char, verbose=False):
 
     #print("data shape ", data.shape[0], data.shape[1])
     
-    #get batches from data
-    for i in range(25):
+    # get batches from data
+
+    # !!!!!IMPORTANT!!!!!IMPORTANT!!!!!IMPORTANT!!!!!IMPORTANT!!!!!IMPORTANT!!!!!IMPORTANT!!!!!IMPORTANT!!!!!
+    # PLEASE MODIFY THE NUMBER IN range() TO TELL THE PROGRAM HOW MANY POEMS YOU WANT
+    # TO USE FOR TRAINING
+    for i in range(200):
         for j in range(data.shape[1] // num_steps - 1):
             x = data[i * batch_size : (i + 1) * batch_size, j * num_steps : (j + 1) * num_steps]
             y = data[i * batch_size : (i + 1) * batch_size, j * num_steps + 1 : (j + 1) * num_steps + 1]
@@ -294,7 +298,8 @@ def main(_):
 
         print("-------")
 
-        for i in range(3):
+        # number of epoch for training
+        for i in range(100):
             #let learning rate decay 
             learning_decay = lr_decay ** max(i, 0.0)
             tf.assign(t_train._learning_rate, learning_decay).eval()
