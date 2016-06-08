@@ -8,7 +8,12 @@ from reader import getDicts
 from reader import read_poems
 import os
 import random
+
 hidden_size = 200
+"""
+This parameter should be carefully set, it is able to
+influence the format of the poem that the model learns.
+"""
 num_steps = 13
 batch_size = 20
 keep_prob = 0.5
@@ -29,10 +34,16 @@ class trainModel(object):
             return out1
 
         if infer:
+            # sampling
             batch_size = 1
             num_steps = 1
         else:
+            # training and validation
             batch_size = 20
+            """
+            This parameter should be carefully set, it is able to
+            influence the format of the poem that the model learns.
+            """
             num_steps = 13
 
         #define placeholders
@@ -157,7 +168,6 @@ class trainModel(object):
 
             print('p shape ', tf.shape(p))
             print('p sum ', np.sum(p))
-            print('p ', p)
 
             sort_map = dict()
 
@@ -168,7 +178,7 @@ class trainModel(object):
 
             print('char = ', char)
             for i in range(20):
-                print(r[i][0], "\t", r[i][1])
+                print(r[i][0], '\t', r[i][1])
 
             sample = np.argmax(p)
 
@@ -203,9 +213,6 @@ class trainModel(object):
                  #print("count: ", cnt)
             #pred# = index_to_char[sample]
 
-            #print(pred.encode('utf8'))
-
-
             char = pred
             poem += pred
             print('n = ', n, ', cnt = ', cnt, ', char = ', char)
@@ -222,7 +229,7 @@ def train(session, train_model, data, eval_op, index_to_char, verbose=False):
     #print("data shape ", data.shape[0], data.shape[1])
     
     #get batches from data
-    for i in range(499):
+    for i in range(25):
         for j in range(data.shape[1] // num_steps - 1):
             x = data[i * batch_size : (i + 1) * batch_size, j * num_steps : (j + 1) * num_steps]
             y = data[i * batch_size : (i + 1) * batch_size, j * num_steps + 1 : (j + 1) * num_steps + 1]
@@ -287,7 +294,7 @@ def main(_):
 
         print("-------")
 
-        for i in range(100):
+        for i in range(3):
             #let learning rate decay 
             learning_decay = lr_decay ** max(i, 0.0)
             tf.assign(t_train._learning_rate, learning_decay).eval()
@@ -299,8 +306,8 @@ def main(_):
             t_train._saver.save(session, checkpoint_path, global_step=i)
             #print("have saved checkpoint")
             #validate
-            #val_perplexity = train(session, t_valid, val_data, tf.no_op(), index_to_char)
-            #print("val_perplexity: ", val_perplexity)
+            val_perplexity = train(session, t_valid, val_data, tf.no_op(), index_to_char)
+            print("val_perplexity: ", val_perplexity)
 
 
 if __name__ == "__main__":
